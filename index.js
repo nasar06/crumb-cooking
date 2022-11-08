@@ -61,13 +61,18 @@ async function run(){
         })
 
         //get review by id
-        // app.get('/reviews/:id',async(req, res)=>{
-        //     const id = req.params.id
-        //     const query = {_id: ObjectId(id)}
-        //     const cursor = reviewCollection.find(query);
-        //     const result = await cursor.toArray()
-        //     req.send(result)
-        // })
+        app.get('/review/:id',async(req, res)=>{
+            let query = {}
+            const id = req.params.id
+            if(id){
+                query ={
+                    service: id
+                }
+            }
+            const cursor = reviewCollection.find(query);
+            const result = await cursor.toArray()
+            res.send(result)
+        })
     }
     finally{}
 }
