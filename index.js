@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 5000
 const cors = require('cors')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 
 app.use(cors())
@@ -23,10 +23,20 @@ const serviceCollection = client.db('cooking').collection('services')
 
 async function run(){
     try{
+        //get services data
         app.get('/services', async(req, res)=>{
+            const size = parseInt(req.query.size)
             const query = {}
             const cursor = serviceCollection.find(query)
-            const result = await cursor.toArray()
+            const result = await cursor.limit(size).toArray()
+            res.send(result)
+        })
+
+        //get service data
+        app.get('/serviceDetail/:id', async(req, res)=>{
+            const id = req.params.id;
+            const query ={_id: ObjectId(id)}
+            const result = await serviceCollection.findOne(query);
             res.send(result)
         })
     }
