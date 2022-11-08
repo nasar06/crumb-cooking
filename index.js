@@ -20,10 +20,12 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 //service collection
 const serviceCollection = client.db('cooking').collection('services')
+//service collection
+const reviewCollection = client.db('cooking').collection('review')
 
 async function run(){
     try{
-        //get services data
+        //get all services data
         app.get('/services', async(req, res)=>{
             const size = parseInt(req.query.size)
             const query = {}
@@ -32,11 +34,18 @@ async function run(){
             res.send(result)
         })
 
-        //get service data
+        //get single service data
         app.get('/serviceDetail/:id', async(req, res)=>{
             const id = req.params.id;
             const query ={_id: ObjectId(id)}
             const result = await serviceCollection.findOne(query);
+            res.send(result)
+        })
+
+        //post Reviews
+        app.post('/reviews', async(req, res) =>{
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review);
             res.send(result)
         })
     }
