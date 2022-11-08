@@ -25,6 +25,8 @@ const reviewCollection = client.db('cooking').collection('review')
 
 async function run(){
     try{
+
+        ////////////////////////////////service area//////////////////
         //get all services data
         app.get('/services', async(req, res)=>{
             const size = parseInt(req.query.size)
@@ -42,12 +44,30 @@ async function run(){
             res.send(result)
         })
 
+        //add service
+        app.post('/services', async(req, res)=>{
+            const service = req.body;
+            const result = await serviceCollection.insertOne(service)
+            res.send(result);
+        })
+
+        ////////////////////////////////Review area//////////////////
+
         //post Reviews
         app.post('/reviews', async(req, res) =>{
             const review = req.body;
             const result = await reviewCollection.insertOne(review);
             res.send(result)
         })
+
+        //get review by id
+        // app.get('/reviews/:id',async(req, res)=>{
+        //     const id = req.params.id
+        //     const query = {_id: ObjectId(id)}
+        //     const cursor = reviewCollection.find(query);
+        //     const result = await cursor.toArray()
+        //     req.send(result)
+        // })
     }
     finally{}
 }
