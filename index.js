@@ -25,8 +25,9 @@ const reviewCollection = client.db('cooking').collection('review')
 
 async function run(){
     try{
-
+                                    ///////////////////
         ////////////////////////////////service area//////////////////
+                                    ///////////////////
         //get all services data
         app.get('/services', async(req, res)=>{
             const size = parseInt(req.query.size)
@@ -50,8 +51,9 @@ async function run(){
             const result = await serviceCollection.insertOne(service)
             res.send(result);
         })
-
+                                    ///////////////////
         ////////////////////////////////Review area//////////////////
+                                    ///////////////////
 
         //post Reviews
         app.post('/reviews', async(req, res) =>{
@@ -60,7 +62,7 @@ async function run(){
             res.send(result)
         })
 
-        //get review by id (detail page)
+        //get review by id (service detail page)
         app.get('/review/:id',async(req, res)=>{
             let query = {}
             const id = req.params.id
@@ -93,6 +95,30 @@ async function run(){
             }
             const cursor = reviewCollection.find(query);
             const result =await cursor.toArray();
+            res.send(result)
+        })
+
+            //////////////////////review edit page/////////////
+
+        //get review single data (reviewEdit page)
+        app.get('/reviewEdit/:id',async(req, res)=>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)}
+            const result = await reviewCollection.findOne(query);
+            res.send(result)
+        })
+
+        //edit review (reviewEdit page)
+        app.patch('/reviewEdit/:id', async(req, res)=>{
+            const id = req.params.id;
+            const dataInfo = req.body;
+            const query = {_id: ObjectId(id)}
+            const updateReview = {
+                $set: {
+                    review : dataInfo.review
+                }
+            }
+            const result = await reviewCollection.updateOne(query, updateReview)
             res.send(result)
         })
     }
