@@ -60,7 +60,7 @@ async function run(){
             res.send(result)
         })
 
-        //get review by id
+        //get review by id (detail page)
         app.get('/review/:id',async(req, res)=>{
             let query = {}
             const id = req.params.id
@@ -71,6 +71,28 @@ async function run(){
             }
             const cursor = reviewCollection.find(query);
             const result = await cursor.toArray()
+            res.send(result)
+        })
+
+        //delete review (my review page)
+        app.delete('/review/:id', async(req, res)=>{
+            const id = req.params.id
+            const query= {_id: ObjectId(id) }
+            const result = await reviewCollection.deleteOne(query)
+            res.send(result)
+        })
+
+        //get myReview by email (my review page)
+        app.get('/myReviews', async(req, res)=>{
+            let query ={}
+            const email = req.query.email;
+            if(email){
+                query={
+                    email: email
+                }
+            }
+            const cursor = reviewCollection.find(query);
+            const result =await cursor.toArray();
             res.send(result)
         })
     }
