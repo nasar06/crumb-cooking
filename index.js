@@ -32,7 +32,10 @@ async function run(){
         app.get('/services', async(req, res)=>{
             const size = parseInt(req.query.size)
             const query = {}
-            const cursor = serviceCollection.find(query)
+            const options = {
+                sort: { "time": -1 },
+              };
+            const cursor = serviceCollection.find(query, options)
             const result = await cursor.limit(size).toArray()
             res.send(result)
         })
